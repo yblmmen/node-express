@@ -15,7 +15,6 @@ const app = express();
 var port = process.env.PORT || 3000; // 기본 포트는 3000입니다.
 app.set('port', port);
 
-
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'njk');
