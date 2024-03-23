@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>계정 생성</title>
+    <style>
+        /* 스타일 시트 */
+    </style>
+</head>
+<body>
+    <div class="welcome-message">
+        <font-color="red">WOW Rich</font-color> 서버에 오신 것을 환영합니다!<p> 
+        ID와 비밀번호를 입력하신 후<p> 
+        '생성' 버튼을 눌러 모험을 즉시 시작하세요.<p>
+    </div>
+    <div class="container">
+        <h2>계정 생성</h2>
+        {% if message %}
+            <p class='message'>{{ message }}</p>
+        {% endif %}
+        <form action="/" method="post">
+            <input type="text" id="username" name="username" placeholder="ID (사용자 이름)" required><br>
+            <input type="password" id="password" name="password" placeholder="패스워드" required><br>
+           
