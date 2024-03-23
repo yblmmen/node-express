@@ -1,57 +1,46 @@
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 const nunjucks = require('nunjucks');
-const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
-const dbConfig = require('./dbconfig');
 
-const indexRouter = require('./routes/index');
+var indexRouter = require('./routes/index');
+// var usersRouter = require('./routes/users');
 
-const app = express();
+var app = express();
 
-// 포트 설정
-var port = process.env.PORT || 3000; // 기본 포트는 3000입니다.
-app.set('port', port);
-
-// View engine setup
+// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'njk');
-nunjucks.configure('views', {
+nunjucks.configure('views', { 
   express: app,
-  autoescape: true,
+  watch: true,
 });
 
-// Middleware setup
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Session setup
-const sessionStore = new MySQLStore(dbConfig);
-app.use(session({
-  key: 'session_cookie_name',
-  secret: 'session_cookie_secret',
-  store: sessionStore,
-  resave: false,
-  saveUninitialized: false
-}));
-
-// Routes setup
 app.use('/', indexRouter);
+// app.use('/users', usersRouter);
 
-// Catch 404 and forward to error handler
+// catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  res.status(404).render('error', { message: 'Not Found' });
+  next(createError(404));
 });
 
-// Error handler
+// error handler
 app.use(function(err, req, res, next) {
-  console.error(err.stack);
-  res.status(500).render('error', { message: 'Internal Server Error' });
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
 module.exports = app;
