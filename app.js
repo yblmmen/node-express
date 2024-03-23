@@ -10,6 +10,11 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 
+// 포트 설정
+var port = process.env.PORT || 3000; // 기본 포트는 3000입니다.
+app.set('port', port);
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'njk');
